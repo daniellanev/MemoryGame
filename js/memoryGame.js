@@ -7,21 +7,27 @@ var selectedCard = [];
 var matchedCards = [];
 
 memoryGame.start = function(){
+	memoryGame.createNavbar();
 	memoryGame.createCards();
 	memoryGame.createArray();
 	memoryGame.shuffle(imageSource);
-	// memoryGame.createNavbar();
 }
 
 memoryGame.refresh = function(){
-	memoryGame.start();
-	// modal.style.display = 'none';
+	document.getElementById('containerID').innerHTML = "";
+	memoryGame.createCards();
+	memoryGame.shuffle(imageSource);
 }
 
 // create nabar
 memoryGame.createNavbar = function(){
 	var navbar = document.createElement('nav');
-	navbar.classList.add('navbar navbar-default', 'myNav');
+	navbar.classList.add('navbar', 'navbar-default', 'myNav');
+	var newGame = document.createElement('button');
+	newGame.classList.add('newGame');
+	newGame.textContent = 'NEW GAME';
+	newGame.addEventListener('click', memoryGame.refresh);
+	navbar.appendChild(newGame);
 	document.body.appendChild(navbar);
 }
 
@@ -30,35 +36,32 @@ memoryGame.checkFinished = function(){
 	matchedCards = document.getElementsByClassName('match');
 	if (matchedCards.length > 1){
 
+		memoryGame.restart = function(){			
+			document.getElementById('containerID').innerHTML = "";
+			memoryGame.createCards();
+			memoryGame.shuffle(imageSource);
+			modal.style.display = 'none';
+		}
 		memoryGame.exitModal = function(){
 			modal.style.display = 'none';
 		}
 
-		memoryGame.restart = function(){
-			modal.style.display = 'none';
-			memoryGame.refresh;
-		}
-
 		var modal = document.createElement('div');
 		modal.classList.add('modal', 'jumbotron');
+		modal.textContent = 'YOU WON!';
+
+		var exit = document.createElement('div');
+		exit.textContent = 'x';
+		exit.classList.add('exit');
+		exit.addEventListener('click', memoryGame.exitModal);
+		modal.appendChild(exit);
 		
-		var text = document.createElement('div');
-		text.classList.add('text');
-		text.textContent = 'YOU WON!';
-		modal.appendChild(text);
-		
-		var playButton = document.createElement('button');
+		var playButton = document.createElement('div');
 		playButton.textContent = 'PLAY AGAIN!';
 		playButton.classList.add('playButton');
 		playButton.addEventListener('click', memoryGame.restart);
 		modal.appendChild(playButton);
 		
-		var exit = document.createElement('button');
-		exit.textContent = 'x';
-		exit.classList.add('exit');
-		exit.addEventListener('click', memoryGame.exitModal);
-		modal.appendChild(exit);
-
 		document.body.appendChild(modal);
 		modal.style.display = 'block';
 	} 
@@ -69,9 +72,6 @@ memoryGame.checkSame = function(){setTimeout(function(){
 	
 	selectedCard = document.getElementsByClassName('selected');
 	
-	console.log("in check");
-	console.log(selectedCard);
-
 	if (selectedCard[0].src !== selectedCard[1].src){
 
 		selectedCard[0].src = './images/texture.jpg';
@@ -87,8 +87,7 @@ memoryGame.checkSame = function(){setTimeout(function(){
 		selectedCard[1].classList.add('match');
 		selectedCard[0].classList.remove('selected');
 		selectedCard[0].classList.remove('selected');
-		matchedCards = document.getElementsByClassName('match');	
-		console.log(matchedCards);
+		matchedCards = document.getElementsByClassName('match');
 		memoryGame.checkFinished();	
 	}
 }, 1500);}
@@ -107,7 +106,6 @@ memoryGame.turnUp = function(e){
 		card.classList.add('selected');
 		memoryGame.checkSame();
 	}
-	console.log(selectedCard.length);
 }
 
 // create cards
@@ -115,6 +113,7 @@ memoryGame.createCards = function(){
 
 	var container = document.createElement('div');
 	container.classList.add('container');
+	container.id = 'containerID';
 
 	var row = document.createElement('div');
 	row.classList.add('row');
@@ -128,9 +127,7 @@ memoryGame.createCards = function(){
 		row.appendChild(card);
 	}
 	container.appendChild(row);
-
-document.body.appendChild(container);
-
+	document.body.appendChild(container);
 }
 
 // create array of image sources
@@ -142,7 +139,7 @@ memoryGame.createArray = function(){
 		cardImage.classList.add('cardImage');
 		source.id = "source" + i;
 		imageSource.push(source);
-		// imageSource.push(source);
+		imageSource.push(source);
 	}
 	console.log(imageSource);
 }
@@ -151,7 +148,26 @@ memoryGame.createArray = function(){
 memoryGame.shuffle = function(o){
 	for (var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
 	return o;
+	console.log(o);
 	}
 
-memoryGame.start();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
