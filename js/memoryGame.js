@@ -5,6 +5,7 @@ NUM_0F_CARDS = 12;
 var imageSource = [];
 var selectedCard = [];
 var matchedCards = [];
+var tries = 0;
 
 memoryGame.start = function(){
 	memoryGame.createNavbar();
@@ -14,33 +15,44 @@ memoryGame.start = function(){
 }
 
 memoryGame.refresh = function(){
-	document.getElementById('containerID').innerHTML = "";
-	memoryGame.createCards();
-	memoryGame.shuffle(imageSource);
+	// document.getElementById('containerID').innerHTML = "";
+	// memoryGame.createCards();
+	// memoryGame.shuffle(imageSource);
+	window.location.reload();
 }
 
 // create nabar
 memoryGame.createNavbar = function(){
 	var navbar = document.createElement('nav');
 	navbar.classList.add('navbar', 'navbar-default', 'myNav');
+	
 	var newGame = document.createElement('button');
 	newGame.classList.add('newGame');
 	newGame.textContent = 'NEW GAME';
 	newGame.addEventListener('click', memoryGame.refresh);
 	navbar.appendChild(newGame);
+
+	// var showTries = document.createElement('div');
+	// showTries.textContent = 'Wrong tries: ' + tries;
+	// showTries.classList.add('showTries');
+	// navbar.appendChild(showTries);
 	document.body.appendChild(navbar);
 }
 
 // function to check if all the cards are found
 memoryGame.checkFinished = function(){
 	matchedCards = document.getElementsByClassName('match');
-	if (matchedCards.length > 1){
+	if (matchedCards.length > 11){
 
 		memoryGame.restart = function(){			
-			document.getElementById('containerID').innerHTML = "";
-			memoryGame.createCards();
-			memoryGame.shuffle(imageSource);
-			modal.style.display = 'none';
+			// document.getElementById('containerID').innerHTML = "";
+			// console.log('cleared');
+			// memoryGame.createCards();
+			// console.log('created cards');
+			// memoryGame.shuffle(imageSource);
+			// console.log('imageSource');
+			// modal.style.display = 'none';
+			window.location.reload();
 		}
 		memoryGame.exitModal = function(){
 			modal.style.display = 'none';
@@ -58,7 +70,7 @@ memoryGame.checkFinished = function(){
 		
 		var playButton = document.createElement('div');
 		playButton.textContent = 'PLAY AGAIN!';
-		playButton.classList.add('playButton');
+		playButton.classList.add('playButton', 'btn', 'btn-primary' ,'btn-lg');
 		playButton.addEventListener('click', memoryGame.restart);
 		modal.appendChild(playButton);
 		
@@ -78,6 +90,8 @@ memoryGame.checkSame = function(){setTimeout(function(){
 		selectedCard[1].src = './images/texture.jpg';
 		selectedCard[0].classList.remove('selected');
 		selectedCard[0].classList.remove('selected');
+
+		tries ++;
 	}
 	else if (selectedCard[0].src == selectedCard[1].src){
 		
@@ -90,7 +104,7 @@ memoryGame.checkSame = function(){setTimeout(function(){
 		matchedCards = document.getElementsByClassName('match');
 		memoryGame.checkFinished();	
 	}
-}, 1500);}
+}, 1000);}
 
 // turning the card up
 memoryGame.turnUp = function(e){
@@ -106,6 +120,7 @@ memoryGame.turnUp = function(e){
 		card.classList.add('selected');
 		memoryGame.checkSame();
 	}
+
 }
 
 // create cards
