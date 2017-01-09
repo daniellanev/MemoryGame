@@ -1,23 +1,19 @@
-
 var memoryGame = {};
 
-NUM_0F_CARDS = 12;
-var imageSource = [];
-var selectedCard = [];
-var matchedCards = [];
-var tries = 0;
+memoryGame.NUM_0F_CARDS = 12;
+memoryGame.imageSource = [];
+memoryGame.selectedCard = [];
+memoryGame.matchedCards = [];
+memoryGame.tries = 0;
 
 memoryGame.start = function(){
 	memoryGame.createNavbar();
 	memoryGame.createCards();
 	memoryGame.createArray();
-	memoryGame.shuffle(imageSource);
+	memoryGame.shuffle(memoryGame.imageSource);
 }
 
 memoryGame.refresh = function(){
-	// document.getElementById('containerID').innerHTML = "";
-	// memoryGame.createCards();
-	// memoryGame.shuffle(imageSource);
 	window.location.reload();
 }
 
@@ -32,26 +28,22 @@ memoryGame.createNavbar = function(){
 	newGame.addEventListener('click', memoryGame.refresh);
 	navbar.appendChild(newGame);
 
-	// var showTries = document.createElement('div');
-	// showTries.textContent = 'Wrong tries: ' + tries;
-	// showTries.classList.add('showTries');
-	// navbar.appendChild(showTries);
+	var showTries = document.createElement('div');
+	showTries.textContent = 'Wrong tries: ' + memoryGame.tries;
+	showTries.classList.add('showTries');
+	navbar.appendChild(showTries);
+	memoryGame.updateTries = function(){
+		showTries.textContent = 'Wrong tries: ' + memoryGame.tries;
+	}
 	document.body.appendChild(navbar);
 }
 
 // function to check if all the cards are found
 memoryGame.checkFinished = function(){
-	matchedCards = document.getElementsByClassName('match');
-	if (matchedCards.length > 11){
+	memoryGame.matchedCards = document.getElementsByClassName('match');
+	if (memoryGame.matchedCards.length > 11){
 
 		memoryGame.restart = function(){			
-			// document.getElementById('containerID').innerHTML = "";
-			// console.log('cleared');
-			// memoryGame.createCards();
-			// console.log('created cards');
-			// memoryGame.shuffle(imageSource);
-			// console.log('imageSource');
-			// modal.style.display = 'none';
 			window.location.reload();
 		}
 		memoryGame.exitModal = function(){
@@ -60,7 +52,7 @@ memoryGame.checkFinished = function(){
 
 		var modal = document.createElement('div');
 		modal.classList.add('modal', 'jumbotron');
-		modal.textContent = 'YOU WON!';
+		modal.textContent = 'YOU WON! With only ' + memoryGame.tries + ' tries!';
 
 		var exit = document.createElement('div');
 		exit.textContent = 'x';
@@ -82,45 +74,45 @@ memoryGame.checkFinished = function(){
 // function to check the two clicked cards are the same
 memoryGame.checkSame = function(){setTimeout(function(){
 	
-	selectedCard = document.getElementsByClassName('selected');
+	memoryGame.selectedCard = document.getElementsByClassName('selected');
 	
-	if (selectedCard[0].src !== selectedCard[1].src){
+	if (memoryGame.selectedCard[0].src !== memoryGame.selectedCard[1].src){
 
-		selectedCard[0].src = './images/texture.jpg';
-		selectedCard[1].src = './images/texture.jpg';
-		selectedCard[0].classList.remove('selected');
-		selectedCard[0].classList.remove('selected');
+		memoryGame.selectedCard[0].src = './images/texture.jpg';
+		memoryGame.selectedCard[1].src = './images/texture.jpg';
+		memoryGame.selectedCard[0].classList.remove('selected');
+		memoryGame.selectedCard[0].classList.remove('selected');
 
-		tries ++;
+		memoryGame.tries ++;
+		memoryGame.updateTries();
 	}
-	else if (selectedCard[0].src == selectedCard[1].src){
+	else if (memoryGame.selectedCard[0].src == memoryGame.selectedCard[1].src){
 		
-		selectedCard[0].removeEventListener('click', memoryGame.turnUp);
-		selectedCard[0].classList.add('match');
-		selectedCard[1].removeEventListener('click', memoryGame.turnUp);
-		selectedCard[1].classList.add('match');
-		selectedCard[0].classList.remove('selected');
-		selectedCard[0].classList.remove('selected');
-		matchedCards = document.getElementsByClassName('match');
+		memoryGame.selectedCard[0].removeEventListener('click', memoryGame.turnUp);
+		memoryGame.selectedCard[0].classList.add('match');
+		memoryGame.selectedCard[1].removeEventListener('click', memoryGame.turnUp);
+		memoryGame.selectedCard[1].classList.add('match');
+		memoryGame.selectedCard[0].classList.remove('selected');
+		memoryGame.selectedCard[0].classList.remove('selected');
+		memoryGame.matchedCards = document.getElementsByClassName('match');
 		memoryGame.checkFinished();	
 	}
 }, 1000);}
 
 // turning the card up
 memoryGame.turnUp = function(e){
-	selectedCard = document.getElementsByClassName('selected');
-	if (selectedCard.length < 1){
+	memoryGame.selectedCard = document.getElementsByClassName('selected');
+	if (memoryGame.selectedCard.length < 1){
 		var card = e.target;
-		card.src = imageSource[card.id - 1];
+		card.src = memoryGame.imageSource[card.id - 1];
 		card.classList.add('selected');
 	}
-	else if (selectedCard.length ==1 ){
+	else if (memoryGame.selectedCard.length == 1){
 		var card = e.target;
-		card.src = imageSource[card.id - 1];
+		card.src = memoryGame.imageSource[card.id - 1];
 		card.classList.add('selected');
 		memoryGame.checkSame();
 	}
-
 }
 
 // create cards
@@ -133,7 +125,7 @@ memoryGame.createCards = function(){
 	var row = document.createElement('div');
 	row.classList.add('row');
 
-	for (var i = 1; i <= NUM_0F_CARDS; i++){
+	for (var i = 1; i <= memoryGame.NUM_0F_CARDS; i++){
 		var card= document.createElement('img');
 		card.src = './images/texture.jpg'
 		card.classList.add('col-lg-2', 'col-sm-2', 'col-xs-2', 'column', 'card', 'clickable');	
@@ -153,29 +145,16 @@ memoryGame.createArray = function(){
 		var source = cardImage.src;
 		cardImage.classList.add('cardImage');
 		source.id = "source" + i;
-		imageSource.push(source);
-		imageSource.push(source);
+		memoryGame.imageSource.push(source);
+		memoryGame.imageSource.push(source);
 	}
-	console.log(imageSource);
 }
 
 // shuffle the array
 memoryGame.shuffle = function(o){
 	for (var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
 	return o;
-	console.log(o);
-	}
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 
